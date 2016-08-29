@@ -1,6 +1,8 @@
 package com.brianway.learning.spring.ioc.beanfactory;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.MutablePropertyValues;
+import org.springframework.beans.PropertyValue;
 import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter;
 
@@ -22,6 +24,11 @@ public class MyInstantiationAwareBeanPostProcessor extends InstantiationAwareBea
         if ("car".equals(beanName)) {
             System.out.println("InstantiationAwareBeanPostProcessor.postProcessBeforeInstantiation");
         }
+//        Car c =new Car();
+//        c.setBrand("caca");
+//        c.setColor("#FFFFF");
+        //这次如果返回一个实例，下面就不会再返回了
+//        return c;
         return null;
     }
 
@@ -45,6 +52,22 @@ public class MyInstantiationAwareBeanPostProcessor extends InstantiationAwareBea
             throws BeansException {
         //仅对car Bean进行处理,还可以通过pds入参进行过滤
         //仅对car的某个特定属性时进行处理
+        //pvs属性大概内容如下：
+        /**
+         *bean property 'brand'
+          name=brand
+          value=红旗CA72
+          size = 0
+         */
+        //pds信息大概内容如下：
+        /**
+         * org.springframework.beans.GenericTypeAwarePropertyDescriptor[name=color]
+           class com.brianway.learning.spring.ioc.beanfactory.Car
+           public java.lang.String com.brianway.learning.spring.ioc.beanfactory.Car.getColor()
+           public void com.brianway.learning.spring.ioc.beanfactory.Car.setColor(java.lang.String)
+         */
+        PropertyValue propertyValue = ( (MutablePropertyValues)pvs ).getPropertyValueList().get(0);
+        propertyValue.setConvertedValue("TTTTTTTTTTTTT");
         if ("car".equals(beanName)) {
             System.out.println("InstantiationAwareBeanPostProcessor.postProcessPropertyValues");
         }
